@@ -1,22 +1,23 @@
 var trap = function(height) {
-    let n = height.length;
-    if (n <= 2) return 0;
-
-    let leftMax = Array(n);
-    let rightMax = Array(n);
-    leftMax[0] = height[0];
-    rightMax[n - 1] = height[n - 1];
-
-    for (let i = 1; i < n; i++) {
-        leftMax[i] = Math.max(leftMax[i-1], height[i]);
+    let left = 0, right = height.length - 1;
+    let leftMax = 0, rightMax = 0;
+    let water = 0;
+    while (left < right) {
+        if (height[left] < height[right]) {
+            if (height[left] >= leftMax) {
+                leftMax = height[left];
+            } else {
+                water += leftMax - height[left];
+            }
+            left++;
+        } else {
+            if (height[right] >= rightMax) {
+                rightMax = height[right];
+            } else {
+                water += rightMax - height[right];
+            }
+            right--;
+        }
     }
-    for (let i = n - 2; i >= 0; i--) {
-        rightMax[i] = Math.max(rightMax[i+1], height[i]);
-    }
-
-    let unit = 0;
-    for (let i = 1; i < n - 1; i++) {
-        unit += Math.max(0, Math.min(leftMax[i], rightMax[i]) - height[i]);
-    }
-    return unit;
-};
+    return water;
+}
